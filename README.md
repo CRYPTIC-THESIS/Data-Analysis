@@ -16,7 +16,9 @@ Commiting and Pushing changes to the Main Branch (After editing the code on your
 *Note: This is done in your created branch*
 
 > git add .
-$ OR
+
+OR
+
 > git add directory/of/the/file/changed.py
 
 > git commit -m "Commit Description"
