@@ -3,6 +3,7 @@ Data Analysis Module of CRYPTIC
 
 Checking the status and what branch you are currenly on
 > git status
+
 > git branch
 
 Creating a New Branch (where you can edit and change the code)
