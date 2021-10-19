@@ -153,6 +153,8 @@ print(recall(actualPriceDirection, predictedPriceDirection, average=None))
 print("\n=====>\tDecreased - Increased (F1 Score)")
 print(f1(actualPriceDirection, predictedPriceDirection, average=None))
 
+#testchanges
+
 #print(precision_recall_fscore_support(actualPriceDirection, predictedPriceDirection, average=None))
 
 '''
