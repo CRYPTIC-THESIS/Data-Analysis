@@ -12,6 +12,7 @@ https://quick-adviser.com/why-is-accuracy-precision-and-recall-the-same/#Can_pre
 !!! '''
 import pandas as pd
 import numpy as np
+from scipy.stats import ttest_rel
 from sklearn.metrics import mean_absolute_error as mae
 from sklearn.metrics import mean_squared_error as mse
 from sklearn.metrics import r2_score as r2
@@ -19,6 +20,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import precision_score as precision
 from sklearn.metrics import recall_score as recall
 from sklearn.metrics import f1_score as f1
+import csv
 ##from sklearn.metrics import precision_recall_fscore_support
 from math import sqrt
 
@@ -45,6 +47,9 @@ print(r2(actualPrice, predictedPrice))
 
 print("\n=====>\tMAPE")
 print(mape(actualPrice, predictedPrice))
+
+print("\n=====>\Paired T-Test")
+print(ttest_rel(actualPrice, predictedPrice, nan_policy='omit'))
 
 dataCorrelation=list(['actual','open_price','24_high','24_low','google','twitter','reddit'])
 
@@ -153,6 +158,7 @@ print(recall(actualPriceDirection, predictedPriceDirection, average=None))
 print("\n=====>\tDecreased - Increased (F1 Score)")
 print(f1(actualPriceDirection, predictedPriceDirection, average=None))
 
+
 #testchanges
 
 #print(precision_recall_fscore_support(actualPriceDirection, predictedPriceDirection, average=None))
@@ -181,3 +187,167 @@ truth =      ["Dog","Not a dog","Dog","Dog",      "Dog", "Not a dog", "Not a dog
 prediction = ["Dog","Dog",      "Dog","Not a dog","Dog", "Not a dog", "Dog",       "Not a dog", "Dog", "Dog"]
 print(classification_report(truth, prediction))
 '''
+
+
+#DATA ANALYSIS TABLE FOR MAE,RMSE,R2,MAPE,TTEST
+analysis = [mae(actualPrice, predictedPrice),sqrt(mse(actualPrice, predictedPrice)),r2(actualPrice, predictedPrice),
+mape(actualPrice, predictedPrice),ttest_rel(actualPrice, predictedPrice, nan_policy='omit')]
+analysis_count = 0
+
+with open('mae-ttest.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for analysis in analysis:
+        analysis_count += 1
+        thewriter.writerow({'Method':analysis_count, 'Analysis':analysis})
+
+#DATA ANALYSIS FOR DATA CORRELATION
+data_cor = [data[dataCorrelation].corr()]
+data_cor_count = 0
+
+with open('data-correlation.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for data_cor in data_cor:
+        data_cor_count += 1
+        thewriter.writerow({'Method':data_cor_count, 'Analysis':data_cor})
+
+#DATA ANALYSIS FOR PREDICTED PRICE DIRECTION
+price_direct = [classification_report(actualPriceDirection, predictedPriceDirection, output_dict = True),
+                classification_report(actualPriceDirection, predictedPriceDirection, output_dict = False)]
+price_direct_count = 0
+
+with open('price-direction.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for price_direct in price_direct:
+        price_direct_count += 1
+        thewriter.writerow({'Method':price_direct_count, 'Analysis':price_direct})
+
+#DATA ANALYSIS FOR ACTUAL-PREDICTED MACRO
+actual_predicted_macro = [precision(actualPriceDirection, predictedPriceDirection, average='macro'),
+                          recall(actualPriceDirection, predictedPriceDirection, average='macro'),
+                          f1(actualPriceDirection, predictedPriceDirection, average='macro'),
+                         ]
+actual_predicted_macro_count = 0
+
+with open('actual-predicted-macro.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for actual_predicted_macro in actual_predicted_macro:
+        actual_predicted_macro_count += 1
+        thewriter.writerow({'Method':actual_predicted_macro_count, 'Analysis':actual_predicted_macro})
+
+#DATA ANALYSIS FOR PREDICTED-ACTUAL MACRO
+predicted_actual_macro = [precision(predictedPriceDirection, actualPriceDirection, average='macro'),
+                          recall(predictedPriceDirection, actualPriceDirection, average='macro'),
+                          f1(predictedPriceDirection, actualPriceDirection, average='macro')
+                         ]
+predicted_actual_macro_count = 0
+
+with open('predicted_actual-macro.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for predicted_actual_macro in predicted_actual_macro:
+        predicted_actual_macro_count += 1
+        thewriter.writerow({'Method':predicted_actual_macro_count, 'Analysis':predicted_actual_macro})
+
+#DATA ANALYSIS FOR ACTUAL-PREDICTED MICRO
+actual_predicted_micro = [ precision(actualPriceDirection, predictedPriceDirection, average='micro'),
+                           recall(actualPriceDirection, predictedPriceDirection, average='micro'),
+                           f1(actualPriceDirection, predictedPriceDirection, average='micro')
+                         ]
+actual_predicted_micro_count = 0
+
+with open('actual-predicted-micro.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for actual_predicted_micro in actual_predicted_micro:
+        actual_predicted_micro_count += 1
+        thewriter.writerow({'Method':actual_predicted_micro_count, 'Analysis':actual_predicted_micro})
+
+#DATA ANALYSIS FOR PREDICTED-ACTUAL MICRO
+predicted_actual_micro = [precision(predictedPriceDirection, actualPriceDirection, average='micro'),
+                          recall(predictedPriceDirection, actualPriceDirection, average='micro'),
+                          f1(predictedPriceDirection, actualPriceDirection, average='micro')
+                         ]
+predicted_actual_micro_count = 0
+
+with open('predicted_actual-micro.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for predicted_actual_micro in predicted_actual_micro:
+        predicted_actual_micro_count += 1
+        thewriter.writerow({'Method':predicted_actual_micro_count, 'Analysis':predicted_actual_micro})
+
+#DATA ANALYSIS FOR ACTUAL-PREDICTED WEIGHTED
+actual_predicted_weighted = [precision(actualPriceDirection, predictedPriceDirection, average='weighted'),
+                             recall(actualPriceDirection, predictedPriceDirection, average='weighted'),
+                             f1(actualPriceDirection, predictedPriceDirection, average='weighted')
+                            ]
+actual_predicted_weighted_count = 0
+
+with open('actual-predicted-weighted.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for actual_predicted_weighted in actual_predicted_weighted:
+        actual_predicted_weighted_count += 1
+        thewriter.writerow({'Method':actual_predicted_weighted_count, 'Analysis':actual_predicted_weighted})
+
+#DATA ANALYSIS FOR PREDICTED-ACTUAL WEIGHTED
+predicted_actual_weighted = [precision(predictedPriceDirection, actualPriceDirection, average='weighted'),
+                             recall(predictedPriceDirection, actualPriceDirection, average='weighted'),
+                             f1(predictedPriceDirection, actualPriceDirection, average='weighted')
+                            ]
+predicted_actual_weighted_count = 0
+
+with open('predicted-actual-weighted.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for predicted_actual_weighted in predicted_actual_weighted:
+        predicted_actual_weighted_count += 1
+        thewriter.writerow({'Method':predicted_actual_weighted_count, 'Analysis':predicted_actual_weighted})
+
+#DATA ANALYSIS PER CLASS
+per_class = [precision(actualPriceDirection, predictedPriceDirection, average=None),
+             recall(actualPriceDirection, predictedPriceDirection, average=None),
+             f1(actualPriceDirection, predictedPriceDirection, average=None)
+            ]
+per_class_count = 0
+
+with open('per_class.csv', 'w', newline = '') as csvfile:
+
+    fieldnames = ['Method', 'Analysis']
+    thewriter = csv.DictWriter(csvfile, fieldnames = fieldnames)
+    thewriter.writeheader()
+
+    for per_class in per_class:
+        per_class_count += 1
+        thewriter.writerow({'Method':per_class_count, 'Analysis':per_class})
