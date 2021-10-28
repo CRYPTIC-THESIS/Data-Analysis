@@ -8,6 +8,7 @@ from sklearn.metrics import precision_score as precision
 from sklearn.metrics import recall_score as recall
 from sklearn.metrics import f1_score as f1
 from sklearn.metrics import accuracy_score as accuracy
+from sklearn.metrics import confusion_matrix
 from math import sqrt
 
 
@@ -72,7 +73,8 @@ def classification_analysis(btc_df, eth_df, doge_df):
         rec_sco = recall(actualPriceDirection,predictedPriceDirection)
         f1_sco = f1(actualPriceDirection,predictedPriceDirection)
         acc_sco = accuracy(actualPriceDirection,predictedPriceDirection)
-
+        #Print Confusion Matrix    
+        print(confusion_matrix(actualPriceDirection,predictedPriceDirection))    
         pd_data = pd.Series([prec_sco , rec_sco, f1_sco , acc_sco], index=classification_analysis_df.columns)
         classification_analysis_df = classification_analysis_df.append(pd_data,ignore_index=True)
     crypto_name = ['BTC','ETH','DOGE']
